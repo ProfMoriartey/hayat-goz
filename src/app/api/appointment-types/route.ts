@@ -14,7 +14,7 @@ const AppointmentTypeSchema = z.object({
 
 export async function GET() {
   const all = await db.select().from(appointmentTypes)
-  return NextResponse.json({ appointmentTypes: all })
+  return NextResponse.json({ types: all })
 }
 
 export async function POST(req: NextRequest) {

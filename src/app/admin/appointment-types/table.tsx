@@ -16,7 +16,7 @@ import { DeleteAppointmentTypeDialog } from "./delete-dialog";
 import { AddAppointmentTypeDialog } from "./add-dialog";
 
 const ApiResponseSchema = z.object({
-  appointmentTypes: z.array(
+  types: z.array(
     z.object({
       id: z.string().uuid(),
       name: z.string(),
@@ -29,7 +29,7 @@ const ApiResponseSchema = z.object({
 
 export type AppointmentType = z.infer<
   typeof ApiResponseSchema
->["appointmentTypes"][number];
+>["types"][number];
 
 export function AppointmentTypeTable() {
   const [types, setTypes] = useState<AppointmentType[]>([]);
@@ -44,7 +44,7 @@ export function AppointmentTypeTable() {
 
         const json = (await res.json()) as unknown;
         const data = ApiResponseSchema.parse(json);
-        setTypes(data.appointmentTypes);
+        setTypes(data.types);
       } catch (err) {
         console.error("Error loading appointment types:", err);
       }
