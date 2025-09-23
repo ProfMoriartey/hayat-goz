@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
+import { format } from "date-fns";
 
 import { Calendar } from "~/components/ui/calendar";
 import {
@@ -57,6 +58,7 @@ const SlotsResponseSchema = z.object({
     z.object({
       startUtc: z.string(),
       endUtc: z.string(),
+      isBooked: z.boolean(), // ✅ include booked flag
     }),
   ),
 });
@@ -337,13 +339,13 @@ export default function BookPage() {
                     selected={data.date ? new Date(data.date) : undefined}
                     onSelect={(day) => {
                       if (day) {
-                        const dateString = day.toISOString().split("T")[0]!; // Add ! to assert non-null
+                        // format in local timezone as YYYY-MM-DD
+                        const dateString = format(day, "yyyy-MM-dd");
                         setData((prev) => ({
                           ...prev,
                           date: dateString,
                         }));
                       } else {
-                        // Handle the case where day is undefined (user clears selection)
                         setData((prev) => ({
                           ...prev,
                           date: null,
@@ -399,8 +401,12 @@ export default function BookPage() {
                     <Button
                       key={s.startUtc}
                       variant={isSelected ? "default" : "outline"}
-                      className="text-sm"
+                      className={`text-sm ${
+                        s.isBooked ? "cursor-not-allowed opacity-50" : ""
+                      }`}
+                      disabled={s.isBooked}
                       onClick={() =>
+                        !s.isBooked &&
                         setData((prev) => ({
                           ...prev,
                           slot: s,
@@ -509,7 +515,14 @@ export default function BookPage() {
                         patient: data.patient,
                       }),
                     });
-
+                    if (!res.ok) {
+                      if (res.status === 409) {
+                        alert("Sorry, this slot is no longer available.");
+                      } else {
+                        throw new Error("Booking failed");
+                      }
+                      return;
+                    }
                     if (!res.ok) throw new Error("Booking failed");
                     alert("Appointment booked successfully!");
                     // TODO: redirect to confirmation page or home

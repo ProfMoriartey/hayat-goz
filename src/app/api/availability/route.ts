@@ -1,8 +1,8 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { db } from "~/server/db";
-import { dailyAvailabilities } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+import { dailyAvailabilities, appointments } from "~/server/db/schema";
+import { and, eq, gt, lt } from "drizzle-orm";
 import { z } from "zod";
 import { addMinutes, isBefore } from "date-fns";
 import { fromZonedTime } from "date-fns-tz";
@@ -28,21 +28,37 @@ export async function GET(req: NextRequest) {
 
   const { doctorId, date } = query.data;
 
-  // Pull any daily availability rows for this doctor/date
+  // 1. Get availabilities for this doctor/date
   const rows = await db
     .select()
     .from(dailyAvailabilities)
     .where(eq(dailyAvailabilities.doctorId, doctorId));
 
-  // Filter by date string
   const todays = rows.filter((r) => r.date === date);
-
   if (todays.length === 0) {
     return NextResponse.json({ slots: [] });
   }
 
-  // Expand rows into slots
-  const slots: { startUtc: string; endUtc: string }[] = [];
+  // 2. Get all confirmed appointments for that day
+  const dayStart = new Date(`${date}T00:00:00Z`);
+  const dayEnd = new Date(`${date}T23:59:59Z`);
+  const existing = await db
+    .select({
+      startTime: appointments.startTime,
+      endTime: appointments.endTime,
+    })
+    .from(appointments)
+    .where(
+      and(
+        eq(appointments.doctorId, doctorId),
+        eq(appointments.status, "CONFIRMED"),
+        gt(appointments.endTime, dayStart),
+        lt(appointments.startTime, dayEnd)
+      )
+    );
+
+  // 3. Expand rows into slots
+  const slots: { startUtc: string; endUtc: string; isBooked: boolean }[] = [];
 
   for (const row of todays) {
     const startLocal = new Date(`${date}T${row.startTime}`);
@@ -57,7 +73,14 @@ export async function GET(req: NextRequest) {
       const startUtc = fromZonedTime(slotStart, CLINIC_TZ).toISOString();
       const endUtc = fromZonedTime(slotEnd, CLINIC_TZ).toISOString();
 
-      slots.push({ startUtc, endUtc });
+      // Check if overlaps with any confirmed appointment
+      const overlaps = existing.some(
+        (appt) =>
+          !(appt.endTime <= new Date(startUtc) ||
+            appt.startTime >= new Date(endUtc))
+      );
+
+      slots.push({ startUtc, endUtc, isBooked: overlaps });
       cursor = slotEnd;
     }
   }

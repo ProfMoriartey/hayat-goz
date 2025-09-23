@@ -8,7 +8,7 @@ import {
   appointmentTypes,
   doctors,
 } from "~/server/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq, gte, lt } from "drizzle-orm";
 import { addMinutes } from "date-fns";
 
 // ---------- Schemas ----------
@@ -107,7 +107,28 @@ export async function POST(req: NextRequest) {
   const start = new Date(parsed.startUtc);
   const end = addMinutes(start, durationMin);
 
-  // 3. Insert appointment
+  // 3. Check for overlapping appointments
+  const overlapping = await db
+    .select()
+    .from(appointments)
+    .where(
+      and(
+        eq(appointments.doctorId, parsed.doctorId),
+        gte(appointments.endTime, start),
+        lt(appointments.startTime, end),
+        eq(appointments.status, "CONFIRMED")
+      )
+    )
+    .limit(1);
+
+  if (overlapping.length > 0) {
+    return NextResponse.json(
+      { error: "This slot is already taken. Please select another." },
+      { status: 409 }
+    );
+  }
+
+  // 4. Insert appointment
   const created = await db
     .insert(appointments)
     .values({
