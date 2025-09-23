@@ -9,7 +9,7 @@ const items = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/doctors", label: "Doctors" },
   { href: "/admin/appointment-types", label: "Appointment Types" },
-  { href: "/admin/availability", label: "Weekly Availability" },
+  { href: "/admin/availabilities", label: "Weekly Availability" },
   { href: "/admin/exceptions", label: "Exceptions / Closures" },
 ];
 

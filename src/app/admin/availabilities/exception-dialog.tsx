@@ -33,7 +33,7 @@ export function EditExceptionDialog({
   const initialWindows: Window[] = exception.windows
     ? exception.windows.split(",").map((w) => {
         const [start, end] = w.trim().split("-");
-        return { start: start || "", end: end || "" }; // ensures string
+        return { start: start ?? "", end: end ?? "" }; // ensures string
       })
     : [];
 

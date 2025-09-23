@@ -12,6 +12,7 @@ import {
 } from "~/components/ui/select";
 import WeeklyAvailability from "./weekly";
 import AvailabilityExceptions from "./exceptions";
+import CalendarAvailability from "./calendar";
 
 const ApiResponseSchema = z.object({
   doctors: z.array(
@@ -70,14 +71,18 @@ export default function AvailabilitiesPage() {
       <Tabs defaultValue="weekly">
         <TabsList>
           <TabsTrigger value="weekly">Weekly Template</TabsTrigger>
-          <TabsTrigger value="exceptions">Exceptions</TabsTrigger>
+          <TabsTrigger value="calendar">Calendar View</TabsTrigger>
+          {/* <TabsTrigger value="exceptions">Exceptions</TabsTrigger> */}
         </TabsList>
         <TabsContent value="weekly">
           <WeeklyAvailability doctorId={doctorId} />
         </TabsContent>
-        <TabsContent value="exceptions">
-          <AvailabilityExceptions doctorId={doctorId} />
+        <TabsContent value="calendar">
+          <CalendarAvailability doctorId={doctorId} />
         </TabsContent>
+        {/* <TabsContent value="exceptions">
+          <AvailabilityExceptions doctorId={doctorId} />
+        </TabsContent> */}
       </Tabs>
     </div>
   );

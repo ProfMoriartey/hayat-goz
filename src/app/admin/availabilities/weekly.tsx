@@ -2,17 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { z } from "zod";
+import {
+  addDays,
+  format,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+} from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import { EditWeeklyDialog } from "./weekly-dialog";
-import { AddAvailabilityDialog } from "./weekly-add-dialog";
+import { AddDailyDialog } from "./daily-add-dialog";
+import { EditDailyDialog } from "./daily-edit-dialog";
 
 const ApiResponseSchema = z.object({
   availabilities: z.array(
     z.object({
       id: z.string().uuid(),
       doctorId: z.string().uuid(),
-      dayOfWeek: z.number(),
+      date: z.string(), // <-- YYYY-MM-DD
       startTime: z.string(),
       endTime: z.string(),
       slotSizeMin: z.number(),
@@ -22,42 +29,46 @@ const ApiResponseSchema = z.object({
 
 type Availability = z.infer<typeof ApiResponseSchema>["availabilities"][number];
 
-const DAYS = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
 export default function WeeklyAvailability({ doctorId }: { doctorId: string }) {
   const [data, setData] = useState<Availability[]>([]);
   const [edit, setEdit] = useState<Availability | null>(null);
-  const [addDay, setAddDay] = useState<number | null>(null);
+  const [addDate, setAddDate] = useState<string | null>(null);
+
+  // figure out the current week (Mon–Sun)
+  const today = new Date();
+  const weekStart = startOfWeek(today, { weekStartsOn: 1 });
+  const weekEnd = endOfWeek(today, { weekStartsOn: 1 });
+  const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
   useEffect(() => {
     void (async () => {
-      const res = await fetch("/api/availabilities");
+      const url = new URL("/api/daily-availabilities", window.location.origin);
+      url.searchParams.set("doctorId", doctorId);
+      url.searchParams.set("start", format(weekStart, "yyyy-MM-dd"));
+      url.searchParams.set("end", format(weekEnd, "yyyy-MM-dd"));
+
+      const res = await fetch(url.toString());
       const json = (await res.json()) as unknown;
       const parsed = ApiResponseSchema.parse(json);
-      setData(parsed.availabilities.filter((a) => a.doctorId === doctorId));
+      setData(parsed.availabilities);
     })();
   }, [doctorId]);
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-      {DAYS.map((day, idx) => {
-        const rows = data.filter((a) => a.dayOfWeek === idx);
+      {days.map((day) => {
+        const iso = format(day, "yyyy-MM-dd");
+        const rows = data.filter(
+          (a) => a.date.startsWith(iso) && a.doctorId === doctorId,
+        );
         return (
-          <Card key={day}>
+          <Card key={iso}>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>{day}</CardTitle>
+              <CardTitle>{format(day, "EEEE d MMM")}</CardTitle>
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => setAddDay(idx)}
+                onClick={() => setAddDate(iso)}
               >
                 + Add
               </Button>
@@ -87,20 +98,22 @@ export default function WeeklyAvailability({ doctorId }: { doctorId: string }) {
         );
       })}
 
+      {/* Dialogs */}
       {edit && (
-        <EditWeeklyDialog
+        <EditDailyDialog
           open={!!edit}
           onOpenChange={(o) => !o && setEdit(null)}
           availability={edit}
+          doctorId={""}
         />
       )}
 
-      {addDay !== null && (
-        <AddAvailabilityDialog
-          open={addDay !== null}
-          onOpenChange={(o) => !o && setAddDay(null)}
+      {addDate && (
+        <AddDailyDialog
+          open={!!addDate}
+          onOpenChange={(o) => !o && setAddDate(null)}
           doctorId={doctorId}
-          dayOfWeek={addDay}
+          date={addDate}
         />
       )}
     </div>
