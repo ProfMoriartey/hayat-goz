@@ -26,9 +26,17 @@ export function DoctorTable() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/doctors")
-      .then((res) => res.json())
-      .then((data) => setDoctors(data.doctors));
+    void (async () => {
+      try {
+        const res = await fetch("/api/doctors");
+        if (!res.ok) throw new Error("Failed to load doctors");
+        const json = (await res.json()) as unknown;
+        const data = json as { doctors: Doctor[] };
+        setDoctors(data.doctors);
+      } catch (err) {
+        console.error("Error loading doctors:", err);
+      }
+    })();
   }, []);
 
   return (
