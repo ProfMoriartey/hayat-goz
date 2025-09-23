@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { EditWeeklyDialog } from "./weekly-dialog";
+import { AddAvailabilityDialog } from "./weekly-add-dialog";
 
 const ApiResponseSchema = z.object({
   availabilities: z.array(
@@ -34,6 +35,7 @@ const DAYS = [
 export default function WeeklyAvailability({ doctorId }: { doctorId: string }) {
   const [data, setData] = useState<Availability[]>([]);
   const [edit, setEdit] = useState<Availability | null>(null);
+  const [addDay, setAddDay] = useState<number | null>(null);
 
   useEffect(() => {
     void (async () => {
@@ -50,8 +52,15 @@ export default function WeeklyAvailability({ doctorId }: { doctorId: string }) {
         const rows = data.filter((a) => a.dayOfWeek === idx);
         return (
           <Card key={day}>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>{day}</CardTitle>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setAddDay(idx)}
+              >
+                + Add
+              </Button>
             </CardHeader>
             <CardContent>
               {rows.length === 0 ? (
@@ -83,6 +92,15 @@ export default function WeeklyAvailability({ doctorId }: { doctorId: string }) {
           open={!!edit}
           onOpenChange={(o) => !o && setEdit(null)}
           availability={edit}
+        />
+      )}
+
+      {addDay !== null && (
+        <AddAvailabilityDialog
+          open={addDay !== null}
+          onOpenChange={(o) => !o && setAddDay(null)}
+          doctorId={doctorId}
+          dayOfWeek={addDay}
         />
       )}
     </div>

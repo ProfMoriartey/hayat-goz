@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
+import { EditExceptionDialog } from "./exception-dialog";
 
 const ApiResponseSchema = z.object({
   exceptions: z.array(
@@ -27,6 +28,7 @@ export default function AvailabilityExceptions({
 }) {
   const [exceptions, setExceptions] = useState<Exception[]>([]);
   const [selected, setSelected] = useState<Date | undefined>(new Date());
+  const [edit, setEdit] = useState<Exception | null>(null);
 
   useEffect(() => {
     void (async () => {
@@ -37,8 +39,10 @@ export default function AvailabilityExceptions({
     })();
   }, [doctorId]);
 
-  const dayStr = selected?.toISOString().split("T")[0];
-  const existing = exceptions.find((e) => e.date.startsWith(dayStr ?? ""));
+  const dayStr = selected ? selected.toISOString().split("T")[0] : undefined;
+  const existing = dayStr
+    ? exceptions.find((e) => e.date.startsWith(dayStr))
+    : undefined;
 
   async function toggleClosed() {
     if (!dayStr) return;
@@ -66,18 +70,23 @@ export default function AvailabilityExceptions({
         <CardHeader>
           <CardTitle>Exceptions for {dayStr}</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-3">
           {existing ? (
-            <div className="space-y-2">
+            <>
               <p>
                 {existing.isClosed
                   ? "Closed all day"
-                  : `Windows: ${existing.windows}`}
+                  : `Windows: ${existing.windows ?? "Full day"}`}
               </p>
-              <Button onClick={toggleClosed}>
-                {existing.isClosed ? "Reopen" : "Mark Closed"}
-              </Button>
-            </div>
+              <div className="flex gap-2">
+                <Button onClick={toggleClosed}>
+                  {existing.isClosed ? "Reopen" : "Mark Closed"}
+                </Button>
+                <Button variant="secondary" onClick={() => setEdit(existing)}>
+                  Set Windows
+                </Button>
+              </div>
+            </>
           ) : (
             <p className="text-muted-foreground">
               No override set for this date
@@ -85,6 +94,15 @@ export default function AvailabilityExceptions({
           )}
         </CardContent>
       </Card>
+
+      {edit && (
+        <EditExceptionDialog
+          open={!!edit}
+          onOpenChange={(o) => !o && setEdit(null)}
+          exception={edit}
+          doctorId={doctorId}
+        />
+      )}
     </div>
   );
 }
