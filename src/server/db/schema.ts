@@ -56,7 +56,7 @@ createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(
 
 export const doctors = pgTable("doctors", {
 id: uuid("id").defaultRandom().primaryKey(),
-userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
 displayName: varchar("display_name", { length: 120 }).notNull(),
 specialties: text("specialties"), // comma-separated or JSON in future
 languages: text("languages"), // e.g., "tr,en,ar"
