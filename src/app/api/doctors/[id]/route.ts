@@ -13,13 +13,14 @@ const DoctorSchema = z.object({
 
 const ParamsSchema = z.object({ id: z.string().uuid() })
 
-export async function PUT(req: NextRequest, context: unknown) {
-  const { params } = context as { params: unknown }
-  const { id } = ParamsSchema.parse(params)
-
+export async function PUT(
+  req: NextRequest, 
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = ParamsSchema.parse(await context.params)
   const json = (await req.json()) as unknown
   const parsed = DoctorSchema.parse(json)
-
+  
   const [updated] = await db
     .update(doctors)
     .set({
@@ -29,14 +30,15 @@ export async function PUT(req: NextRequest, context: unknown) {
     })
     .where(eq(doctors.id, id))
     .returning()
-
+    
   return NextResponse.json({ doctor: updated })
 }
 
-export async function DELETE(_req: NextRequest, context: unknown) {
-  const { params } = context as { params: unknown }
-  const { id } = ParamsSchema.parse(params)
-
+export async function DELETE(
+  _req: NextRequest, 
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = ParamsSchema.parse(await context.params)
   await db.delete(doctors).where(eq(doctors.id, id))
   return NextResponse.json({ success: true })
 }
