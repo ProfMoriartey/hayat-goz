@@ -13,7 +13,7 @@ const links = [
     desc: "Durations & buffers.",
   },
   {
-    href: "/admin/availability",
+    href: "/admin/availabilities",
     title: "Weekly Availability",
     desc: "Recurring working hours.",
   },
