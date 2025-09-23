@@ -12,6 +12,9 @@ import {
 } from "~/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { EditAppointmentDialog } from "./edit-dialog";
+import { CancelAppointmentDialog } from "./cancel-dialog";
 
 const ApiResponseSchema = z.object({
   appointments: z.array(
@@ -33,20 +36,24 @@ type Appointment = z.infer<typeof ApiResponseSchema>["appointments"][number];
 export default function AdminAppointmentsPage() {
   const [data, setData] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [edit, setEdit] = useState<Appointment | null>(null);
+  const [cancelId, setCancelId] = useState<string | null>(null);
+
+  async function loadData() {
+    try {
+      const res = await fetch("/api/appointments");
+      const json = (await res.json()) as unknown;
+      const parsed = ApiResponseSchema.parse(json);
+      setData(parsed.appointments);
+    } catch (e) {
+      console.error("Failed to load appointments", e);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    void (async () => {
-      try {
-        const res = await fetch("/api/appointments");
-        const json = (await res.json()) as unknown;
-        const parsed = ApiResponseSchema.parse(json);
-        setData(parsed.appointments);
-      } catch (e) {
-        console.error("Failed to load appointments", e);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    void loadData();
   }, []);
 
   return (
@@ -72,6 +79,7 @@ export default function AdminAppointmentsPage() {
                 <TableHead>Date</TableHead>
                 <TableHead>Time</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead> {/* 👈 add column */}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -115,6 +123,22 @@ export default function AdminAppointmentsPage() {
                         {a.status}
                       </Badge>
                     </TableCell>
+                    <TableCell className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => setEdit(a)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => setCancelId(a.id)}
+                      >
+                        Cancel
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -122,6 +146,25 @@ export default function AdminAppointmentsPage() {
           </Table>
         )}
       </CardContent>
+
+      {/* 👇 dialogs */}
+      {edit && (
+        <EditAppointmentDialog
+          open={!!edit}
+          onOpenChange={(o) => !o && setEdit(null)}
+          appointment={edit}
+          refresh={loadData}
+        />
+      )}
+
+      {cancelId && (
+        <CancelAppointmentDialog
+          open={!!cancelId}
+          onOpenChange={(o) => !o && setCancelId(null)}
+          appointmentId={cancelId}
+          refresh={loadData}
+        />
+      )}
     </Card>
   );
 }
