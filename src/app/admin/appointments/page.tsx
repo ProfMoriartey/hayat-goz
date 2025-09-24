@@ -141,8 +141,8 @@ export default function AdminAppointmentsPage() {
     let y: string | number = "";
 
     if (key === "startTime" || key === "endTime") {
-      x = new Date(a[key] as string).getTime();
-      y = new Date(b[key] as string).getTime();
+      x = new Date(a[key]).getTime();
+      y = new Date(b[key]).getTime();
     } else {
       x = a[key] ?? "";
       y = b[key] ?? "";
