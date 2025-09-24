@@ -1,5 +1,99 @@
 {
   "HomePage": {
-    "title": "Hello turkish!"
+    "navbar": {
+      "bookNow": "Randevu Al"
+    },
+    "hero": {
+      "title": "Hayat Göz Kliniğine Hoşgeldiniz",
+      "desc": "İstanbul’da güvenilir göz bakımı, modern teknoloji ve şefkatli bir ekip ile.",
+      "cta": "Randevu Oluştur"
+    },
+    "services": {
+      "title": "Hizmetlerimiz",
+      "items": {
+        "general": {
+          "title": "Genel Göz Muayeneleri",
+          "desc": "Görme sağlığınızı korumak için kapsamlı muayeneler."
+        },
+        "laser": {
+          "title": "Lazer Danışmanlığı",
+          "desc": "Lazer ameliyatının size uygun olup olmadığını öğrenin."
+        },
+        "children": {
+          "title": "Çocuk Göz Sağlığı",
+          "desc": "Küçük hastalar için nazik ve özenli bakım."
+        }
+      }
+    },
+    "footer": {
+      "clinic": "Hayat Göz Kliniği",
+      "address": "📍 İstanbul, Türkiye",
+      "phone": "📞 +90 555 123 4567",
+      "email": "✉️ info@hayatgoz.com"
+    }
+  },
+  "BookPage": {
+    "header": {
+      "title": "Randevu Al",
+      "step": "Adım {current} / {total}"
+    },
+    "doctor": {
+      "title": "Doktor Seç",
+      "label": "Doktor",
+      "placeholder": "Bir doktor seçin",
+      "loading": "Yükleniyor…",
+      "error": "Doktorlar yüklenemedi",
+      "none": "Şu anda uygun doktor yok. Lütfen daha sonra tekrar deneyin."
+    },
+    "type": {
+      "title": "Randevu Türü Seç",
+      "label": "Tür",
+      "placeholder": "Randevu türü seçin",
+      "loading": "Yükleniyor…",
+      "error": "Randevu türleri yüklenemedi",
+      "none": "Uygun randevu türü yok."
+    },
+    "date": {
+  "title": "Tarih Seç",
+  "loading": "Yükleniyor…",
+  "weekdays": {
+    "sun": "Paz",
+    "mon": "Pts",
+    "tue": "Sal",
+    "wed": "Çar",
+    "thu": "Per",
+    "fri": "Cum",
+    "sat": "Cmt"
+  }
+},
+    "slot": {
+      "title": "Saat Seç",
+      "loading": "Saatler yükleniyor…",
+      "error": "Saatler yüklenemedi",
+      "none": "Bu gün için uygun saat yok."
+    },
+    "details": {
+      "title": "Bilgilerinizi girin"
+    },
+    "review": {
+      "title": "Gözden Geçir & Onayla",
+      "doctor": "Doktor",
+      "type": "Randevu Türü",
+      "date": "Tarih",
+      "time": "Saat",
+      "patient": "Hasta"
+    },
+    "buttons": {
+      "back": "Geri",
+      "next": "İleri",
+      "confirm": "Onayla"
+    },
+    "alerts": {
+      "slotTaken": "Üzgünüz, bu saat artık uygun değil.",
+      "failed": "Rezervasyon başarısız",
+      "success": "Randevu başarıyla alındı!",
+      "unexpected": "Beklenmedik bir hata oluştu"
+    }
   }
 }
+

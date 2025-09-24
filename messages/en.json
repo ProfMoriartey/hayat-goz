@@ -1,5 +1,101 @@
 {
   "HomePage": {
-    "title": "Hello world!"
+    "navbar": {
+      "bookNow": "Book Now"
+    },
+    "hero": {
+      "title": "Welcome to Hayat Göz Clinic",
+      "desc": "Providing trusted eye care in Istanbul with modern technology and a compassionate team.",
+      "cta": "Book an Appointment"
+    },
+    "services": {
+      "title": "Our Services",
+      "items": {
+        "general": {
+          "title": "General Eye Exams",
+          "desc": "Comprehensive eye exams to keep your vision healthy."
+        },
+        "laser": {
+          "title": "Laser Consultations",
+          "desc": "Find out if laser surgery is right for you."
+        },
+        "children": {
+          "title": "Children’s Eye Care",
+          "desc": "Gentle and attentive care for young patients."
+        }
+      }
+    },
+    "footer": {
+      "clinic": "Hayat Göz Clinic",
+      "address": "📍 Istanbul, Turkey",
+      "phone": "📞 +90 555 123 4567",
+      "email": "✉️ info@hayatgoz.com"
+    }
+  },
+  
+  "BookPage": {
+    "header": {
+      "title": "Book an appointment",
+      "step": "Step {current} of {total}"
+    },
+    "doctor": {
+      "title": "Select a doctor",
+      "label": "Doctor",
+      "placeholder": "Choose a doctor",
+      "loading": "Loading…",
+      "error": "Failed to load doctors",
+      "none": "No doctors available yet. Please try again later."
+    },
+    "type": {
+      "title": "Select appointment type",
+      "label": "Type",
+      "placeholder": "Choose appointment type",
+      "loading": "Loading…",
+      "error": "Failed to load appointment types",
+      "none": "No appointment types available."
+    },
+    "date": {
+  "title": "Select a date",
+  "loading": "Loading…",
+  "weekdays": {
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat"
+  }
+},
+    "slot": {
+      "title": "Select a time slot",
+      "loading": "Loading slots…",
+      "error": "Failed to load slots",
+      "none": "No available slots for this date."
+    },
+    "details": {
+      "title": "Enter your details"
+    },
+    "review": {
+      "title": "Review & Confirm",
+      "doctor": "Doctor",
+      "type": "Appointment Type",
+      "date": "Date",
+      "time": "Time",
+      "patient": "Patient"
+    },
+    "buttons": {
+      "back": "Back",
+      "next": "Next",
+      "confirm": "Confirm"
+    },
+    "alerts": {
+      "slotTaken": "Sorry, this slot is no longer available.",
+      "failed": "Booking failed",
+      "success": "Appointment booked successfully!",
+      "unexpected": "Unexpected booking error"
+    }
   }
 }
+
+
