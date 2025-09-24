@@ -1,0 +1,68 @@
+// book/page.tsx date seletion
+// <Calendar
+//               mode="single"
+//               selected={data.date ? new Date(data.date) : undefined}
+//               onSelect={(day) => {
+//                 if (day) {
+//                   const dateString = format(day, "yyyy-MM-dd"); // local date, no UTC shift
+//                   setData((prev) => ({ ...prev, date: dateString }));
+//                 }
+//               }}
+//               modifiers={{
+//                 available: (day) => {
+//                   const dateString = format(day, "yyyy-MM-dd");
+//                   return monthAvailability.some(
+//                     (d) => d.date === dateString && d.hasSlots,
+//                   );
+//                 },
+//                 unavailable: (day) => {
+//                   const dateString = format(day, "yyyy-MM-dd");
+//                   return monthAvailability.some(
+//                     (d) => d.date === dateString && !d.hasSlots,
+//                   );
+//                 },
+//               }}
+//               modifiersClassNames={{
+//                 available: "bg-green-100 text-green-800",
+//                 unavailable: "bg-red-100 text-red-800 line-through",
+//               }}
+//               initialFocus
+//             />
+
+         {/* Weekly overview */}
+            // <div className="grid grid-cols-7 gap-2">
+            //   {loadingWeekly ? (
+            //     <p className="text-muted-foreground col-span-7 text-sm">
+            //       Loading week…
+            //     </p>
+            //   ) : (
+            //     weekly.map((day) => {
+            //       const isSelected = data.date === day.date;
+            //       return (
+            //         <Button
+            //           key={day.date}
+            //           size="sm"
+            //           variant={
+            //             !day.hasSlots
+            //               ? "secondary"
+            //               : isSelected
+            //                 ? "default"
+            //                 : "outline"
+            //           }
+            //           disabled={!day.hasSlots}
+            //           onClick={() =>
+            //             setData((prev) => ({
+            //               ...prev,
+            //               date: day.date,
+            //             }))
+            //           }
+            //         >
+            //           {new Date(day.date).toLocaleDateString(undefined, {
+            //             weekday: "short",
+            //             day: "numeric",
+            //           })}
+            //         </Button>
+            //       );
+            //     })
+            //   )}
+            // </div>

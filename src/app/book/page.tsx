@@ -13,7 +13,15 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
-import { format } from "date-fns";
+import {
+  startOfWeek,
+  endOfWeek,
+  format,
+  eachDayOfInterval,
+  startOfMonth,
+  endOfMonth,
+  addMonths,
+} from "date-fns";
 
 import { Calendar } from "~/components/ui/calendar";
 import {
@@ -175,6 +183,83 @@ export default function BookPage() {
     })();
   }, [step, data.doctorId, data.appointmentTypeId, data.date]);
 
+  const [weekly, setWeekly] = useState<
+    { date: string; totalSlots: number; freeSlots: number; hasSlots: boolean }[]
+  >([]);
+  const [loadingWeekly, setLoadingWeekly] = useState(false);
+
+  useEffect(() => {
+    if (step !== 2 || !data.doctorId || !data.appointmentTypeId) return;
+
+    const today = new Date();
+    const weekStart = startOfWeek(today, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(today, { weekStartsOn: 1 });
+
+    void (async () => {
+      try {
+        setLoadingWeekly(true);
+        const url = new URL("/api/availability", window.location.origin);
+        url.searchParams.set("doctorId", data.doctorId!);
+        url.searchParams.set("weekStart", format(weekStart, "yyyy-MM-dd"));
+        url.searchParams.set("weekEnd", format(weekEnd, "yyyy-MM-dd"));
+
+        const res = await fetch(url.toString());
+        if (!res.ok) throw new Error("Failed to load weekly availability");
+        const json = (await res.json()) as { availability: typeof weekly };
+        setWeekly(json.availability);
+      } catch (err) {
+        console.error("Weekly fetch error", err);
+      } finally {
+        setLoadingWeekly(false);
+      }
+    })();
+  }, [step, data.doctorId, data.appointmentTypeId]);
+
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [monthAvailability, setMonthAvailability] = useState<
+    { date: string; totalSlots: number; freeSlots: number; hasSlots: boolean }[]
+  >([]);
+  const [loadingMonth, setLoadingMonth] = useState(false);
+
+  // Load month availability whenever doctorId or currentMonth changes
+  useEffect(() => {
+    if (!data.doctorId) return;
+
+    const monthStr = format(currentMonth, "yyyy-MM"); // YYYY-MM
+
+    setLoadingMonth(true);
+    void (async () => {
+      try {
+        const url = new URL("/api/availability", window.location.origin);
+        url.searchParams.set("doctorId", data.doctorId!);
+        url.searchParams.set("month", monthStr);
+
+        const res = await fetch(url.toString());
+        if (!res.ok) throw new Error("Failed to load monthly availability");
+
+        const json = (await res.json()) as {
+          availability: {
+            date: string;
+            totalSlots: number;
+            freeSlots: number;
+            hasSlots: boolean;
+          }[];
+        };
+        setMonthAvailability(json.availability);
+      } catch (err) {
+        console.error("Error fetching monthly availability", err);
+      } finally {
+        setLoadingMonth(false);
+      }
+    })();
+  }, [data.doctorId, currentMonth]);
+
+  // Build days of current month
+  const daysInMonth = eachDayOfInterval({
+    start: startOfMonth(currentMonth),
+    end: endOfMonth(currentMonth),
+  });
+
   const canContinue = useMemo(() => !!data.doctorId, [data.doctorId]);
 
   return (
@@ -307,56 +392,96 @@ export default function BookPage() {
       {/* STEP 3: Date selection */}
       {step === 2 && (
         <Card>
-          <CardHeader>
+          <CardHeader className="flex items-center justify-between">
             <CardTitle>Select a date</CardTitle>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}
+              >
+                Prev
+              </Button>
+              <span className="font-medium">
+                {format(currentMonth, "MMMM yyyy")}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+              >
+                Next
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid gap-2">
-              <label className="text-sm font-medium">Date</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-[240px] justify-start text-left font-normal",
-                      !data.date && "text-muted-foreground",
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {data.date
-                      ? new Date(data.date).toLocaleDateString(undefined, {
-                          weekday: "short",
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })
-                      : "Pick a date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={data.date ? new Date(data.date) : undefined}
-                    onSelect={(day) => {
-                      if (day) {
-                        // format in local timezone as YYYY-MM-DD
-                        const dateString = format(day, "yyyy-MM-dd");
-                        setData((prev) => ({
-                          ...prev,
-                          date: dateString,
-                        }));
-                      } else {
-                        setData((prev) => ({
-                          ...prev,
-                          date: null,
-                        }));
-                      }
-                    }}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+            {loadingMonth ? (
+              <p className="text-muted-foreground text-sm">Loading…</p>
+            ) : (
+              <>
+                {/* Weekday labels */}
+                <div className="text-muted-foreground mb-2 grid grid-cols-7 gap-2 text-center text-sm font-medium">
+                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                    (d) => (
+                      <div key={d}>{d}</div>
+                    ),
+                  )}
+                </div>
+
+                {/* Dates grid */}
+                <div className="grid grid-cols-7 gap-1 sm:gap-2">
+                  {(() => {
+                    const firstDay = startOfMonth(currentMonth);
+                    const lastDay = endOfMonth(currentMonth);
+
+                    const startDayOfWeek = firstDay.getDay();
+                    const days = eachDayOfInterval({
+                      start: firstDay,
+                      end: lastDay,
+                    });
+                    const paddedDays: (Date | null)[] = [
+                      ...Array(startDayOfWeek).fill(null),
+                      ...days,
+                    ];
+
+                    return paddedDays.map((day, idx) => {
+                      if (!day) return <div key={`empty-${idx}`} />;
+
+                      const dateStr = format(day, "yyyy-MM-dd");
+                      const availability = monthAvailability.find(
+                        (d) => d.date === dateStr,
+                      );
+                      const isSelected = data.date === dateStr;
+                      const isAvailable = availability?.hasSlots ?? false;
+
+                      return (
+                        <Button
+                          key={dateStr}
+                          size="sm"
+                          variant={
+                            !isAvailable
+                              ? "secondary"
+                              : isSelected
+                                ? "default"
+                                : "outline"
+                          }
+                          disabled={!isAvailable}
+                          onClick={() =>
+                            setData((prev) => ({
+                              ...prev,
+                              date: dateStr,
+                            }))
+                          }
+                          className="mx-auto h-10 w-10 p-0 sm:h-16 sm:w-16"
+                        >
+                          {format(day, "d")}
+                        </Button>
+                      );
+                    });
+                  })()}
+                </div>
+              </>
+            )}
 
             {/* Navigation */}
             <div className="flex justify-end gap-2">
