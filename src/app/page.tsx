@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { UserButton } from "@clerk/nextjs";
 
 export default function LandingPage() {
   return (
@@ -119,6 +120,7 @@ export default function LandingPage() {
           <p className="text-center font-semibold text-white md:text-left">
             Hayat Göz Clinic
           </p>
+          <UserButton />
           <div className="mt-2 space-y-1 text-center text-sm md:mt-3 md:text-left md:text-base">
             <p>📍 Istanbul, Turkey</p>
             <p>📞 +90 555 123 4567</p>
