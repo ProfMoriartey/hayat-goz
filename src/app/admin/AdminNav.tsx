@@ -15,7 +15,7 @@ const items = [
   { href: "/admin/doctors", label: "Doctors" },
   { href: "/admin/appointment-types", label: "Appointment Types" },
   { href: "/admin/availabilities", label: "Weekly Availability" },
-  { href: "/admin/exceptions", label: "Exceptions / Closures" },
+  { href: "/admin/appointments", label: "Appointments" },
 ];
 
 export default function AdminNav() {

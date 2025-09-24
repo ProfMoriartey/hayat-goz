@@ -23,6 +23,8 @@ import {
   addMonths,
 } from "date-fns";
 
+import { useRouter } from "next/navigation";
+
 import { PatientInfoForm } from "./PatientInfoForm";
 
 // ---------- Types & schemas ----------
@@ -86,6 +88,8 @@ export default function BookPage() {
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const router = useRouter();
 
   // Fetch doctors
   useEffect(() => {
@@ -643,7 +647,7 @@ export default function BookPage() {
                     }
                     if (!res.ok) throw new Error("Booking failed");
                     alert("Appointment booked successfully!");
-                    // TODO: redirect to confirmation page or home
+                    router.push("/");
                   } catch (e) {
                     const msg =
                       e instanceof Error

@@ -18,9 +18,9 @@ const links = [
     desc: "Recurring working hours.",
   },
   {
-    href: "/admin/exceptions",
-    title: "Exceptions",
-    desc: "Vacations, holidays, closures.",
+    href: "/admin/appointments",
+    title: "Appointments",
+    desc: "Appointments booked by patients",
   },
 ];
 
