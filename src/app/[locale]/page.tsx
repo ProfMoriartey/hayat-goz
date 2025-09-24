@@ -5,10 +5,13 @@ import Image from "next/image";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { UserButton } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 
 export default function LandingPage() {
+  const t = useTranslations("HomePage");
   return (
     <div className="flex min-h-screen flex-col">
+      <h1>{t("title")}</h1>
       {/* Navbar */}
       <header className="sticky top-0 z-50 bg-white shadow-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6 md:py-4">
