@@ -12,7 +12,6 @@ index,
 date,
 } from "drizzle-orm/pg-core";
 
-import { relations } from "drizzle-orm";
 
 
 export const roleEnum = pgEnum("role", ["ADMIN", "DOCTOR", "RECEPTION", "PATIENT"]);

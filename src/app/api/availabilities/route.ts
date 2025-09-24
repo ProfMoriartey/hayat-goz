@@ -3,7 +3,6 @@ import { NextResponse } from "next/server"
 import { db } from "~/server/db"
 import { availabilities } from "~/server/db/schema"
 import { z } from "zod"
-import { eq } from "drizzle-orm"
 
 const AvailabilitySchema = z.object({
   doctorId: z.string().uuid(),

@@ -3,7 +3,6 @@ import { NextResponse } from "next/server"
 import { db } from "~/server/db"
 import { appointmentTypes } from "~/server/db/schema"
 import { z } from "zod"
-import { eq } from "drizzle-orm"
 
 const AppointmentTypeSchema = z.object({
   name: z.string().min(2),

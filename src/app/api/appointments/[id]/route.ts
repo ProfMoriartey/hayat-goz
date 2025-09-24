@@ -59,10 +59,10 @@ export async function PATCH(
   }
 
   // Recompute times
-  let newStartTime = parsed.startUtc
+  const newStartTime = parsed.startUtc
     ? new Date(parsed.startUtc)
     : current.startTime;
-  let newEndTime = addMinutes(newStartTime, apptType[0]!.durationMin);
+  const newEndTime = addMinutes(newStartTime, apptType[0]!.durationMin);
 
   // Apply update
   const [updated] = await db

@@ -23,14 +23,6 @@ import {
   addMonths,
 } from "date-fns";
 
-import { Calendar } from "~/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { cn } from "~/lib/utils";
 import { PatientInfoForm } from "./PatientInfoForm";
 
 // ---------- Types & schemas ----------
@@ -439,10 +431,11 @@ export default function BookPage() {
                       start: firstDay,
                       end: lastDay,
                     });
-                    const paddedDays: (Date | null)[] = [
-                      ...Array(startDayOfWeek).fill(null),
-                      ...days,
-                    ];
+                    const fillers: (Date | null)[] = Array.from(
+                      { length: startDayOfWeek },
+                      () => null,
+                    );
+                    const paddedDays: (Date | null)[] = [...fillers, ...days];
 
                     return paddedDays.map((day, idx) => {
                       if (!day) return <div key={`empty-${idx}`} />;

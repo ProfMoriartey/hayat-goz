@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import {
-  addDays,
-  format,
-  startOfWeek,
-  endOfWeek,
-  eachDayOfInterval,
-} from "date-fns";
+import { format, startOfWeek, endOfWeek, eachDayOfInterval } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { AddDailyDialog } from "./daily-add-dialog";
