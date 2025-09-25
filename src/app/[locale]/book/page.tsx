@@ -266,9 +266,9 @@ export default function BookPage() {
     <div className="mx-auto w-full max-w-3xl space-y-6 p-6">
       {/* Simple step header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Book an appointment</h1>
+        <h1 className="text-2xl font-semibold">{t("header.title")}</h1>
         <span className="text-muted-foreground text-sm">
-          Step {step + 1} of 6
+          {t("header.step", { current: step + 1, total: 6 })}
         </span>
       </div>
       <Separator />
@@ -277,21 +277,25 @@ export default function BookPage() {
       {step === 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Select a doctor</CardTitle>
+            <CardTitle>{t("doctor.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {loading ? (
-              <p className="text-muted-foreground text-sm">Loading…</p>
+              <p className="text-muted-foreground text-sm">
+                {t("doctor.loading")}
+              </p>
             ) : error ? (
-              <p className="text-sm text-red-600">{error}</p>
+              <p className="text-sm text-red-600">{t("doctor.error")}</p>
             ) : doctors.length === 0 ? (
               <p className="text-muted-foreground text-sm">
-                No doctors available yet. Please try again later.
+                {t("doctor.none")}
               </p>
             ) : (
               <div className="grid gap-4">
                 <div className="grid gap-2">
-                  <label className="text-sm font-medium">Doctor</label>
+                  <label className="text-sm font-medium">
+                    {t("doctor.label")}
+                  </label>
                   <Select
                     value={data.doctorId ?? undefined}
                     onValueChange={(val) =>
@@ -299,7 +303,7 @@ export default function BookPage() {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Choose a doctor" />
+                      <SelectValue placeholder={t("doctor.placeholder")} />
                     </SelectTrigger>
                     <SelectContent>
                       {doctors.map((d) => (
@@ -311,20 +315,13 @@ export default function BookPage() {
                     </SelectContent>
                   </Select>
                 </div>
-
                 {/* Next button */}
                 <div className="flex justify-end gap-2">
-                  <Button
-                    variant="secondary"
-                    onClick={() => {
-                      // (no-op; first step)
-                    }}
-                    disabled
-                  >
-                    Back
+                  <Button variant="secondary" disabled>
+                    {t("buttons.back")}
                   </Button>
                   <Button onClick={() => setStep(1)} disabled={!canContinue}>
-                    Next
+                    {t("buttons.next")}
                   </Button>
                 </div>
               </div>
@@ -337,21 +334,23 @@ export default function BookPage() {
       {step === 1 && (
         <Card>
           <CardHeader>
-            <CardTitle>Select appointment type</CardTitle>
+            <CardTitle>{t("type.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {loadingTypes ? (
-              <p className="text-muted-foreground text-sm">Loading…</p>
-            ) : errorTypes ? (
-              <p className="text-sm text-red-600">{errorTypes}</p>
-            ) : types.length === 0 ? (
               <p className="text-muted-foreground text-sm">
-                No appointment types available.
+                {t("type.loading")}
               </p>
+            ) : errorTypes ? (
+              <p className="text-sm text-red-600">{t("type.error")}</p>
+            ) : types.length === 0 ? (
+              <p className="text-muted-foreground text-sm">{t("type.none")}</p>
             ) : (
               <div className="grid gap-4">
                 <div className="grid gap-2">
-                  <label className="text-sm font-medium">Type</label>
+                  <label className="text-sm font-medium">
+                    {t("type.label")}
+                  </label>
                   <Select
                     value={data.appointmentTypeId ?? undefined}
                     onValueChange={(val) =>
@@ -359,28 +358,27 @@ export default function BookPage() {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Choose appointment type" />
+                      <SelectValue placeholder={t("type.placeholder")} />
                     </SelectTrigger>
                     <SelectContent>
-                      {types.map((t) => (
-                        <SelectItem key={t.id} value={t.id}>
-                          {t.name} ({t.durationMin} min)
+                      {types.map((tType) => (
+                        <SelectItem key={tType.id} value={tType.id}>
+                          {tType.name} ({tType.durationMin} min)
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
 
-                {/* Navigation */}
                 <div className="flex justify-end gap-2">
                   <Button variant="secondary" onClick={() => setStep(0)}>
-                    Back
+                    {t("buttons.back")}
                   </Button>
                   <Button
                     onClick={() => setStep(2)}
                     disabled={!data.appointmentTypeId}
                   >
-                    Next
+                    {t("buttons.next")}
                   </Button>
                 </div>
               </div>
@@ -393,7 +391,7 @@ export default function BookPage() {
       {step === 2 && (
         <Card>
           <CardHeader className="flex items-center justify-between">
-            <CardTitle>Select a date</CardTitle>
+            <CardTitle>{t("date.title")}</CardTitle>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
@@ -416,14 +414,16 @@ export default function BookPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             {loadingMonth ? (
-              <p className="text-muted-foreground text-sm">Loading…</p>
+              <p className="text-muted-foreground text-sm">
+                {t("date.loading")}
+              </p>
             ) : (
               <>
                 {/* Weekday labels */}
                 <div className="text-muted-foreground mb-2 grid grid-cols-7 gap-2 text-center text-sm font-medium">
-                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                    (d) => (
-                      <div key={d}>{d}</div>
+                  {["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map(
+                    (key) => (
+                      <div key={key}>{t(`date.weekdays.${key}`)}</div>
                     ),
                   )}
                 </div>
@@ -487,10 +487,10 @@ export default function BookPage() {
             {/* Navigation */}
             <div className="flex justify-end gap-2">
               <Button variant="secondary" onClick={() => setStep(1)}>
-                Back
+                {t("buttons.back")}
               </Button>
               <Button onClick={() => setStep(3)} disabled={!data.date}>
-                Next
+                {t("buttons.next")}
               </Button>
             </div>
           </CardContent>
@@ -501,17 +501,17 @@ export default function BookPage() {
       {step === 3 && (
         <Card>
           <CardHeader>
-            <CardTitle>Select a time slot</CardTitle>
+            <CardTitle>{t("slot.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {loadingSlots ? (
-              <p className="text-muted-foreground text-sm">Loading slots…</p>
-            ) : errorSlots ? (
-              <p className="text-sm text-red-600">{errorSlots}</p>
-            ) : slots.length === 0 ? (
               <p className="text-muted-foreground text-sm">
-                No available slots for this date.
+                {t("slot.loading")}
               </p>
+            ) : errorSlots ? (
+              <p className="text-sm text-red-600">{t("slot.error")}</p>
+            ) : slots.length === 0 ? (
+              <p className="text-muted-foreground text-sm">{t("slot.none")}</p>
             ) : (
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                 {slots.map((s) => {
@@ -549,10 +549,10 @@ export default function BookPage() {
             {/* Navigation */}
             <div className="flex justify-end gap-2">
               <Button variant="secondary" onClick={() => setStep(2)}>
-                Back
+                {t("buttons.back")}
               </Button>
               <Button onClick={() => setStep(4)} disabled={!data.slot}>
-                Next
+                {t("buttons.next")}
               </Button>
             </div>
           </CardContent>
@@ -562,7 +562,7 @@ export default function BookPage() {
       {step === 4 && (
         <Card>
           <CardHeader>
-            <CardTitle>Enter your details</CardTitle>
+            <CardTitle>{t("details.title")}</CardTitle>
           </CardHeader>
           <CardContent>
             <PatientInfoForm
@@ -574,7 +574,7 @@ export default function BookPage() {
             />
             <div className="mt-4 flex justify-end">
               <Button variant="secondary" onClick={() => setStep(3)}>
-                Back
+                {t("buttons.back")}
               </Button>
             </div>
           </CardContent>
@@ -584,20 +584,23 @@ export default function BookPage() {
       {step === 5 && data.patient && data.slot && (
         <Card>
           <CardHeader>
-            <CardTitle>Review & Confirm</CardTitle>
+            <CardTitle>{t("review.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2 text-sm">
               <p>
-                <strong>Doctor:</strong>{" "}
+                <strong>{t("review.doctor")}:</strong>{" "}
                 {doctors.find((d) => d.id === data.doctorId)?.displayName}
               </p>
               <p>
-                <strong>Appointment Type:</strong>{" "}
-                {types.find((t) => t.id === data.appointmentTypeId)?.name}
+                <strong>{t("review.type")}:</strong>{" "}
+                {
+                  types.find((tType) => tType.id === data.appointmentTypeId)
+                    ?.name
+                }
               </p>
               <p>
-                <strong>Date:</strong>{" "}
+                <strong>{t("review.date")}:</strong>{" "}
                 {data.date &&
                   new Date(data.date).toLocaleDateString(undefined, {
                     weekday: "long",
@@ -607,14 +610,14 @@ export default function BookPage() {
                   })}
               </p>
               <p>
-                <strong>Time:</strong>{" "}
+                <strong>{t("review.time")}:</strong>{" "}
                 {new Date(data.slot.startUtc).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
               </p>
               <p>
-                <strong>Patient:</strong> {data.patient.fullName},{" "}
+                <strong>{t("review.patient")}:</strong> {data.patient.fullName},{" "}
                 {data.patient.phone}
                 {data.patient.email ? `, ${data.patient.email}` : ""}
               </p>
@@ -623,13 +626,12 @@ export default function BookPage() {
             {/* Navigation */}
             <div className="flex justify-end gap-2">
               <Button variant="secondary" onClick={() => setStep(2)}>
-                Back
+                {t("buttons.back")}
               </Button>
               <Button
-                disabled={!data.slot} // guard button
+                disabled={!data.slot}
                 onClick={async () => {
-                  if (!data.slot || !data.patient) return; // ⬅️ runtime guard
-
+                  if (!data.slot || !data.patient) return;
                   try {
                     const res = await fetch("/api/appointments", {
                       method: "POST",
@@ -637,31 +639,27 @@ export default function BookPage() {
                       body: JSON.stringify({
                         doctorId: data.doctorId,
                         appointmentTypeId: data.appointmentTypeId,
-                        startUtc: data.slot.startUtc, // ✅ safe now
+                        startUtc: data.slot.startUtc,
                         patient: data.patient,
                       }),
                     });
                     if (!res.ok) {
                       if (res.status === 409) {
-                        alert("Sorry, this slot is no longer available.");
+                        alert(t("alerts.slotTaken"));
                       } else {
-                        throw new Error("Booking failed");
+                        throw new Error(t("alerts.failed"));
                       }
                       return;
                     }
                     if (!res.ok) throw new Error("Booking failed");
-                    alert("Appointment booked successfully!");
+                    alert(t("alerts.success"));
                     router.push("/");
                   } catch (e) {
-                    const msg =
-                      e instanceof Error
-                        ? e.message
-                        : "Unexpected booking error";
-                    alert(msg);
+                    alert(t("alerts.unexpected"));
                   }
                 }}
               >
-                Confirm
+                {t("buttons.confirm")}
               </Button>
             </div>
           </CardContent>
