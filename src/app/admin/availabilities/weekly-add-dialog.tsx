@@ -25,7 +25,7 @@ export function AddAvailabilityDialog({
   const [form, setForm] = useState({
     startTime: "09:00",
     endTime: "17:00",
-    slotSizeMin: "30",
+    slotSizeMin: "20",
   });
 
   async function handleSave() {

@@ -118,11 +118,11 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="mt-auto bg-gray-900 text-gray-300">
         <div className="mx-auto max-w-6xl px-4 py-8 md:px-6">
-          <p className="text-center font-semibold text-white md:text-left">
+          <p className="text-center font-semibold text-white md:text-start">
             {t("footer.clinic")}
           </p>
           <UserButton />
-          <div className="mt-2 space-y-1 text-center text-sm md:mt-3 md:text-left md:text-base">
+          <div className="mt-2 space-y-1 text-center text-sm md:mt-3 md:text-start md:text-base">
             <p>{t("footer.address")}</p>
             <p>{t("footer.phone")}</p>
             <p>{t("footer.email")}</p>
