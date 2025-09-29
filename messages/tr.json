@@ -94,6 +94,20 @@
       "success": "Randevu başarıyla alındı!",
       "unexpected": "Beklenmedik bir hata oluştu"
     }
+  },
+  "PatientForm": {
+  "labels": {
+    "fullName": "Ad Soyad",
+    "phone": "Telefon",
+    "email": "E-posta (opsiyonel)"
+  },
+  "errors": {
+    "required": "İsim ve telefon zorunludur"
+  },
+  "buttons": {
+    "continue": "Devam Et"
   }
+}
+
 }
 

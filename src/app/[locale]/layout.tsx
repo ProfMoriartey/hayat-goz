@@ -39,7 +39,11 @@ export default async function LocaleLayout({ children, params }: Props) {
   }
 
   return (
-    <html lang={locale} className={geist.variable}>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className={geist.variable}
+    >
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}

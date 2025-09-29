@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { useTranslations } from "next-intl";
 
 type Patient = {
   fullName: string;
@@ -18,6 +19,8 @@ export function PatientInfoForm({
   onComplete: (patient: Patient) => void;
   initial?: Patient | null;
 }) {
+  const t = useTranslations("PatientForm");
+
   const [form, setForm] = useState<Patient>({
     fullName: initial?.fullName ?? "",
     phone: initial?.phone ?? "",
@@ -27,7 +30,7 @@ export function PatientInfoForm({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.fullName || !form.phone) {
-      alert("Name and phone are required");
+      alert(t("errors.required"));
       return;
     }
     onComplete(form);
@@ -36,7 +39,7 @@ export function PatientInfoForm({
   return (
     <form onSubmit={handleSubmit} className="max-w-md space-y-4">
       <div>
-        <Label htmlFor="fullName">Full Name</Label>
+        <Label htmlFor="fullName">{t("labels.fullName")}</Label>
         <Input
           id="fullName"
           value={form.fullName}
@@ -46,7 +49,7 @@ export function PatientInfoForm({
       </div>
 
       <div>
-        <Label htmlFor="phone">Phone</Label>
+        <Label htmlFor="phone">{t("labels.phone")}</Label>
         <Input
           id="phone"
           type="tel"
@@ -57,7 +60,7 @@ export function PatientInfoForm({
       </div>
 
       <div>
-        <Label htmlFor="email">Email (optional)</Label>
+        <Label htmlFor="email">{t("labels.email")}</Label>
         <Input
           id="email"
           type="email"
@@ -67,7 +70,7 @@ export function PatientInfoForm({
       </div>
 
       <Button type="submit" className="w-full">
-        Continue
+        {t("buttons.continue")}
       </Button>
     </form>
   );

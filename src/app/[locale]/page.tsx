@@ -6,6 +6,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { UserButton } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
+import { LocaleSwitcher } from "~/components/LocaleSwitcher";
 
 export default function LandingPage() {
   const t = useTranslations("HomePage");
@@ -39,11 +40,14 @@ export default function LandingPage() {
               className="h-7 w-13 md:h-9 md:w-25"
             />
           </div>
-          <Link href="/book">
-            <Button className="bg-[#575749] text-sm hover:bg-[#676758] md:text-base">
-              {t("navbar.bookNow")}
-            </Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            <LocaleSwitcher />
+            <Link href="/book">
+              <Button className="bg-[#575749] text-sm hover:bg-[#676758] md:text-base">
+                {t("navbar.bookNow")}
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 

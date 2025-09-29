@@ -95,7 +95,21 @@
       "success": "Appointment booked successfully!",
       "unexpected": "Unexpected booking error"
     }
+  },
+  "PatientForm": {
+  "labels": {
+    "fullName": "Full Name",
+    "phone": "Phone",
+    "email": "Email (optional)"
+  },
+  "errors": {
+    "required": "Name and phone are required"
+  },
+  "buttons": {
+    "continue": "Continue"
   }
+}
+
 }
 
 

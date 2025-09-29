@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation";
 import { PatientInfoForm } from "./PatientInfoForm";
 
 import { useTranslations } from "next-intl";
+import { LocaleSwitcher } from "~/components/LocaleSwitcher";
 
 // ---------- Types & schemas ----------
 const DoctorsResponseSchema = z.object({
@@ -267,9 +268,12 @@ export default function BookPage() {
       {/* Simple step header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{t("header.title")}</h1>
-        <span className="text-muted-foreground text-sm">
-          {t("header.step", { current: step + 1, total: 6 })}
-        </span>
+        <div className="flex items-center gap-4">
+          <LocaleSwitcher />
+          <span className="text-muted-foreground text-sm">
+            {t("header.step", { current: step + 1, total: 6 })}
+          </span>
+        </div>
       </div>
       <Separator />
 
@@ -363,7 +367,7 @@ export default function BookPage() {
                     <SelectContent>
                       {types.map((tType) => (
                         <SelectItem key={tType.id} value={tType.id}>
-                          {tType.name} ({tType.durationMin} min)
+                          {tType.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -398,7 +402,7 @@ export default function BookPage() {
                 size="sm"
                 onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}
               >
-                Prev
+                {t("buttons.back")}
               </Button>
               <span className="font-medium">
                 {format(currentMonth, "MMMM yyyy")}
@@ -408,7 +412,7 @@ export default function BookPage() {
                 size="sm"
                 onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
               >
-                Next
+                {t("buttons.next")}
               </Button>
             </div>
           </CardHeader>
