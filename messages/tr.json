@@ -5,7 +5,7 @@
     },
     "hero": {
       "title": "Hayat Göz Kliniğine Hoşgeldiniz",
-      "desc": "İstanbul’da güvenilir göz bakımı, modern teknoloji ve şefkatli bir ekip ile.",
+      "desc": "Bursa’da güvenilir göz bakımı, modern teknoloji ve şefkatli bir ekip ile.",
       "cta": "Randevu Oluştur"
     },
     "services": {
@@ -27,7 +27,7 @@
     },
     "footer": {
       "clinic": "Hayat Göz Kliniği",
-      "address": "📍 İstanbul, Türkiye",
+      "address": "📍 Bursa, Türkiye",
       "phone": "📞 +90 555 123 4567",
       "email": "✉️ info@hayatgoz.com"
     }

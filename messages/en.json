@@ -5,7 +5,7 @@
     },
     "hero": {
       "title": "Welcome to Hayat Göz Clinic",
-      "desc": "Providing trusted eye care in Istanbul with modern technology and a compassionate team.",
+      "desc": "Providing trusted eye care in Bursa with modern technology and a compassionate team.",
       "cta": "Book an Appointment"
     },
     "services": {
@@ -27,7 +27,7 @@
     },
     "footer": {
       "clinic": "Hayat Göz Clinic",
-      "address": "📍 Istanbul, Turkey",
+      "address": "📍 Bursa, Turkey",
       "phone": "📞 +90 555 123 4567",
       "email": "✉️ info@hayatgoz.com"
     }
