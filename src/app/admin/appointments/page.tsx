@@ -108,7 +108,7 @@ export default function AdminAppointmentsPage() {
   // apply filters
   const filteredData = data.filter((a) => {
     const start = new Date(a.startTime);
-    const end = new Date(a.endTime);
+    // const end = new Date(a.endTime);
 
     const startDateStr = start.toISOString().slice(0, 10); // yyyy-mm-dd
     const startTimeStr = start.toLocaleTimeString([], {

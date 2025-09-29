@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { routing } from "~/i18n/routing"; // your locales list
+import { routing } from "~/i18n/routing";
 import { useLocale } from "next-intl";
 import {
   Select,
@@ -11,18 +11,24 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 
+// Infer the union type from routing.locales
+type Locale = (typeof routing.locales)[number];
+
 export function LocaleSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
 
-  function onSelect(newLocale: (typeof routing.locales)[number]) {
+  function onSelect(newLocale: Locale) {
     if (!pathname) return;
 
     const segments = pathname.split("/");
-    if (routing.locales.includes(segments[1] as any)) {
+
+    // If first path segment is already a locale, replace it
+    if (routing.locales.includes(segments[1] as Locale)) {
       segments[1] = newLocale;
     } else {
+      // Otherwise insert it
       segments.splice(1, 0, newLocale);
     }
 
@@ -30,8 +36,8 @@ export function LocaleSwitcher() {
   }
 
   return (
-    <Select value={locale} onValueChange={onSelect}>
-      <SelectTrigger className="w-20">
+    <Select value={locale} onValueChange={(val) => onSelect(val as Locale)}>
+      <SelectTrigger className="w-28">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
